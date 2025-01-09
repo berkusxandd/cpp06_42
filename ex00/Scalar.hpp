@@ -3,6 +3,7 @@
 
 #include <string>
 #include <stdexcept>
+#include <iostream>
 class Scalar
 {
 
@@ -14,7 +15,7 @@ class Scalar
         int intVal;
         double doubleVal;
         float fVal;
-        enum scalarType {charType,intType,floatType,doubleType} type;
+        void inputCheck(std::string &str);
     class EmptyInputException : public std::exception
     {
         public:

@@ -3,7 +3,9 @@
 Scalar::Scalar(std::string &str) : _str(str)
 {
     if (str.empty())
-        throw Scalar::EmptyInputException();
+        throw EmptyInputException();
+    if (str == "-inff" || str == "-inf")
+        
 }
 
 const char * Scalar::EmptyInputException::what() const throw()
