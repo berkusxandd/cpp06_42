@@ -4,6 +4,7 @@
 #include <string>
 #include <stdexcept>
 #include <iostream>
+#include <cstdlib>
 class Scalar
 {
 
@@ -16,6 +17,7 @@ class Scalar
         double doubleVal;
         float fVal;
         void inputCheck(std::string &str);
+        enum {cType, intType, fType, dType} type;
     class EmptyInputException : public std::exception
     {
         public:
@@ -27,5 +29,7 @@ class Scalar
             virtual const char * what() const throw();
     };
 };
+
+
 
 #endif

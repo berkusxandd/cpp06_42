@@ -1,5 +1,5 @@
 NAME = ex00
-SRCS = main.cpp
+SRCS = main.cpp Scalar.cpp
 OBJS = $(SRCS:.cpp=.o)
 OBJDIR = ./objs
 OBJ_PATHS = $(addprefix $(OBJDIR)/, $(OBJS))
