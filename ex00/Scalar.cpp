@@ -1,6 +1,6 @@
 #include "Scalar.hpp"
 
-Scalar::Scalar(std::string &str) : _str(str)
+Scalar::Scalar(std::string &str) : _str(str), type(impossible)
 {
     if (str.empty())
         throw EmptyInputException();
@@ -17,9 +17,7 @@ Scalar::Scalar(std::string &str) : _str(str)
             this->charVal = str.c_str()[0];
         }
         else
-        {
-            throw Scalar::InvalidInputException();
-        }
+            return;
     }
     else
     {
@@ -27,27 +25,67 @@ Scalar::Scalar(std::string &str) : _str(str)
         long lValue = strtol(str.c_str(),&lRes, 10);
         if (*lRes)
         {
-            // it is not int
             char *dRes;
             double dValue = strtod(str.c_str(),&dRes);
-            if (*dRes != 'f')
+
+            if (!*dRes)
             {
                 this->type = dType;
                 this->doubleVal = dValue;
             }
-            else
+            else if (dRes[0] == 'f' && !dRes[1])
             {
                 this->type = fType;
                 this->fVal = static_cast<float>(dValue);
             }
+            else
+                return;
         }
         else
         {
-            //it is int
-            //add limits checker
+            if (lValue > __INT_MAX__ || lValue < __WINT_MIN__)
+                return ;
             this->type = intType;
             this->intVal = static_cast<int>(lValue);
         }
+    }
+}
+
+Scalar::~Scalar()
+{}
+
+char Scalar::getCharVal() const
+{
+    switch (this->type)
+    {
+        case cType:
+            return this->charVal;
+        case intType:
+        {
+            if (this->intVal > static_cast<int>(std::numeric_limits<char>::max()) || this->intVal < static_cast<int>(std::numeric_limits<char>::min()))
+                throw InvalidInputException();
+            char c = static_cast<char>(this->intVal);
+            if (!isprint(c))
+                throw Scalar::NonDisplayableException();
+            else
+                return (c);
+        }
+        case fType:
+        {
+            if (this->fVal > static_cast<float>(std::numeric_limits<char>::max()) || this->fVal < static_cast<float>(std::numeric_limits<char>::min()) || std::isnan(this->fVal) || std::isinf(this->fVal))
+                throw InvalidInputException();
+            char c = static_cast<char>(this->fVal);
+            return (c);
+        }
+        case dType:
+        {
+            if (this->doubleVal > static_cast<double>(std::numeric_limits<char>::max()) || this->doubleVal < static_cast<double>(std::numeric_limits<char>::min()) || std::isnan(this->doubleVal) || std::isinf(this->doubleVal))
+                throw InvalidInputException();
+            char c = static_cast<char>(this->doubleVal);
+            return (c);
+        }
+        default:
+            throw InvalidInputException();
     }
 }
 
@@ -58,5 +96,26 @@ const char * Scalar::EmptyInputException::what() const throw()
 
 const char * Scalar::InvalidInputException::what() const throw()
 {
-    return("Input is invalid.");
+    return("impossible");
+}
+
+const char * Scalar::NonDisplayableException::what() const throw()
+{
+    return("Non displayable");
+}
+
+std::ostream& operator<<(std::ostream& o, const Scalar& rhs)
+{
+    o << "char: ";
+    try
+    {
+        char cVal = rhs.getCharVal();
+        o << cVal << std::endl;
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+    
+    return o;
 }

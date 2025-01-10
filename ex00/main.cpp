@@ -2,8 +2,23 @@
 #include <string>
 #include <cstdlib>
 #include "Scalar.hpp"
-int main()
+#include <limits>
+int main(int ac, char **av)
 {
-    std::string a = "a";
-    Scalar scalar(a);
+    if (ac > 1)
+    {
+        try
+        {
+            std::string str = std::string(av[1]);
+            Scalar scalar(str);
+            std::cout << scalar;
+        }
+        catch(const std::exception& e)
+        {
+            std::cerr << e.what() << '\n';
+        }
+        
+    }
+    else
+        std::cout << "error";
 }

@@ -5,19 +5,25 @@
 #include <stdexcept>
 #include <iostream>
 #include <cstdlib>
+#include <limits>
+#include <cmath>
 class Scalar
 {
 
     public:
         Scalar(std::string &str);
+        ~Scalar();
+        char getCharVal() const;
+        int getIntVal();
+        float getFVal();
+        double getDVal();
     private:
         std::string &_str;
         char charVal;
         int intVal;
         double doubleVal;
         float fVal;
-        void inputCheck(std::string &str);
-        enum {cType, intType, fType, dType} type;
+        enum {cType, intType, fType, dType, impossible} type;
     class EmptyInputException : public std::exception
     {
         public:
@@ -28,8 +34,13 @@ class Scalar
         public:
             virtual const char * what() const throw();
     };
+    class NonDisplayableException : public std::exception
+    {
+        public:
+            virtual const char * what() const throw();
+    };
 };
 
-
+std::ostream & operator<<(std::ostream& o, const Scalar& rhs);
 
 #endif
