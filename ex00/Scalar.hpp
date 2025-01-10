@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Scalar.hpp                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bince <bince@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/01/10 14:22:05 by bince             #+#    #+#             */
+/*   Updated: 2025/01/10 14:22:06 by bince            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef SCALAR_HPP
 #define SCALAR_HPP
 
@@ -14,11 +26,10 @@ class Scalar
         Scalar(std::string &str);
         ~Scalar();
         char getCharVal() const;
-        int getIntVal();
-        float getFVal();
-        double getDVal();
+        int getIntVal() const;
+        float getFVal() const;
+        double getDVal() const;
     private:
-        std::string &_str;
         char charVal;
         int intVal;
         double doubleVal;
