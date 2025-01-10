@@ -6,27 +6,219 @@
 /*   By: bince <bince@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 14:22:03 by bince             #+#    #+#             */
-/*   Updated: 2025/01/10 14:22:04 by bince            ###   ########.fr       */
+/*   Updated: 2025/01/10 16:22:57 by bince            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Scalar.hpp"
 
-Scalar::Scalar(std::string &str) : type(impossible)
+static void putDVal(char charVal, int intVal, float fVal, double doubleVal)
 {
-    if (str.empty())
-        throw EmptyInputException();
-    if (str.size() == 1)
+    switch (type)
     {
-        if (isdigit(str.c_str()[0]))
+        case cType:
         {
-            this->type = intType;
-            this->intVal = static_cast<int>(strtol(str.c_str(),NULL,10));
+            double d = static_cast<double>(charVal);
+            std::cout << d << std::endl;
+            break;
         }
-        else if (isprint(str.c_str()[0]))
+        case intType:
         {
-            this->type = cType;
-            this->charVal = str.c_str()[0];
+            double d = static_cast<double>(intVal);
+            std::cout << d << std::endl;
+            break;
+        }
+        case fType:
+        {
+            double d = static_cast<double>(fVal);
+            std::cout << d << std::endl;
+            break;
+        }
+        case dType:
+        {
+            std::cout << doubleVal << std::endl;
+            break;
+        }
+        case impossible:
+        {
+            std::cout << "impossible" << std::endl;
+            break;
+        }
+    }
+}
+
+static void putFVal(char charVal, int intVal, float fVal, double doubleVal)
+{
+    switch (type)
+    {
+        case cType:
+        {
+            float f = static_cast<float>(charVal);
+            std::cout << f << "f"<< std::endl;
+            break;
+        }
+        case intType:
+        {
+            float f = static_cast<float>(intVal);
+            std::cout << f << "f" << std::endl;
+            break;
+        }
+        case fType:
+        {
+            std::cout << fVal << "f" << std::endl;
+            break;
+        }
+        case dType:
+        {
+            float f = static_cast<float>(doubleVal);
+            std::cout << f << "f" << std::endl;
+            break;
+        }
+        case impossible:
+        {
+            std::cout << "impossible" << std::endl;
+            break;
+        }
+    }
+}
+
+static void putIntVal(char charVal, int intVal, float fVal, double doubleVal)
+{
+    switch (type)
+    {
+        case cType:
+        {
+            int i = static_cast<int>(charVal);
+            std::cout << i << std::endl;
+            break;
+        }
+        case intType:
+        {
+            std::cout << intVal << std::endl;
+            break;
+        }
+        case fType:
+        {
+            if (fVal > static_cast<float>(std::numeric_limits<int>::max()) || fVal < static_cast<float>(std::numeric_limits<int>::min()) || std::isnan(fVal) || std::isinf(fVal))
+            { 
+                std::cout << "impossible" << std::endl;
+                break;
+            }
+            int i = static_cast<int>(fVal);
+            std::cout << i << std::endl;
+            break;
+        }
+        case dType:
+        {
+            if (doubleVal > static_cast<double>(std::numeric_limits<int>::max()) || doubleVal < static_cast<double>(std::numeric_limits<int>::min()) || std::isnan(doubleVal) || std::isinf(doubleVal))
+            { 
+                std::cout << "impossible" << std::endl;
+                break;
+            }
+            int i = static_cast<int>(doubleVal);
+            std::cout << i << std::endl;
+            break;
+        }
+        case impossible:
+        {
+            std::cout << "impossible" << std::endl;
+            break;
+        }
+    }
+}
+
+static void putCharVal(char charVal, int intVal, float fVal, double doubleVal)
+{
+    switch (type)
+    {
+        case cType:
+        {
+            std::cout << charVal << std::endl;
+            break;
+        }
+        case intType:
+        {
+            if (intVal > static_cast<int>(std::numeric_limits<char>::max()) || intVal < static_cast<int>(std::numeric_limits<char>::min()))
+            {
+                std::cout << "impossible" << std::endl;
+                break;
+            }
+            char c = static_cast<char>(intVal);
+            if (!isprint(intVal))
+            {
+                std::cout << "non displayable" << std::endl;
+                break;
+            }
+            std::cout << c << std::endl;
+            break;
+        }
+        case fType:
+        {
+            if (fVal > static_cast<float>(std::numeric_limits<char>::max()) || fVal < static_cast<float>(std::numeric_limits<char>::min()) || std::isnan(fVal) || std::isinf(fVal))
+            { 
+                std::cout << "impossible" << std::endl;
+                break;
+            }
+            char c = static_cast<char>(fVal);
+            if (!isprint(c))
+            {
+                std::cout << "non displayable" << std::endl;
+                break;
+            }
+            std::cout << c << std::endl;
+            break;
+        }
+        case dType:
+        {
+            if (doubleVal > static_cast<double>(std::numeric_limits<char>::max()) || doubleVal < static_cast<double>(std::numeric_limits<char>::min()) || std::isnan(doubleVal) || std::isinf(doubleVal))
+            { 
+                std::cout << "impossible" << std::endl;
+                break;
+            }
+            char c = static_cast<char>(doubleVal);
+            if (!isprint(c))
+            {
+                std::cout << "non displayable" << std::endl;
+                break;
+            }
+            std::cout << c << std::endl;
+            break;
+        }
+        case impossible:
+        {
+            std::cout << "impossible" << std::endl;
+            break;
+        }
+    }
+}
+
+
+const char * Scalar::EmptyInputException::what() const throw()
+{
+    return("Input cannot be invalid.");
+}
+
+void Scalar::convert(std::string &param)
+{
+    type = impossible;
+    char charVal = 0;
+    int intVal = 0;
+    float fVal = 0;
+    double doubleVal = 0;
+    
+    if (param.empty())
+        throw EmptyInputException();
+    if (param.size() == 1)
+    {
+        if (isdigit(param.c_str()[0]))
+        {
+            type = intType;
+            intVal = static_cast<int>(strtol(param.c_str(),NULL,10));
+        }
+        else if (isprint(param.c_str()[0]))
+        {
+            type = cType;
+            charVal = param.c_str()[0];
         }
         else
             return;
@@ -34,212 +226,38 @@ Scalar::Scalar(std::string &str) : type(impossible)
     else
     {
         char *lRes;
-        long lValue = strtol(str.c_str(),&lRes, 10);
+        long lValue = strtol(param.c_str(),&lRes, 10);
         if (*lRes)
         {
             char *dRes;
-            double dValue = strtod(str.c_str(),&dRes);
+            double dValue = strtod(param.c_str(),&dRes);
 
             if (!*dRes)
             {
-                this->type = dType;
-                this->doubleVal = dValue;
+                type = dType;
+                doubleVal = dValue;
             }
             else if (dRes[0] == 'f' && !dRes[1])
             {
-                this->type = fType;
-                this->fVal = static_cast<float>(dValue);
+                type = fType;
+                fVal = static_cast<float>(dValue);
             }
-            else
-                return;
         }
         else
         {
-            if (lValue > 2147483647 || lValue < -2147483648)
-                return ;
-            this->type = intType;
-            this->intVal = static_cast<int>(lValue);
+            if (lValue <= 2147483647 && lValue >= -2147483648)
+            {
+            type = intType;
+            intVal = static_cast<int>(lValue);
+            }
         }
     }
-}
-
-Scalar::~Scalar()
-{}
-
-char Scalar::getCharVal() const
-{
-    switch (this->type)
-    {
-        case cType:
-            return this->charVal;
-        case intType:
-        {
-            if (this->intVal > static_cast<int>(std::numeric_limits<char>::max()) || this->intVal < static_cast<int>(std::numeric_limits<char>::min()))
-                throw InvalidInputException();
-            char c = static_cast<char>(this->intVal);
-            if (!isprint(c))
-                throw Scalar::NonDisplayableException();
-            else
-                return (c);
-        }
-        case fType:
-        {
-            if (this->fVal > static_cast<float>(std::numeric_limits<char>::max()) || this->fVal < static_cast<float>(std::numeric_limits<char>::min()) || std::isnan(this->fVal) || std::isinf(this->fVal))
-                throw InvalidInputException();
-            char c = static_cast<char>(this->fVal);
-            return (c);
-        }
-        case dType:
-        {
-            if (this->doubleVal > static_cast<double>(std::numeric_limits<char>::max()) || this->doubleVal < static_cast<double>(std::numeric_limits<char>::min()) || std::isnan(this->doubleVal) || std::isinf(this->doubleVal))
-                throw InvalidInputException();
-            char c = static_cast<char>(this->doubleVal);
-            return (c);
-        }
-        default:
-            throw InvalidInputException();
-    }
-}
-
-int Scalar::getIntVal() const
-{
-    switch (this->type)
-    {
-        case cType:
-        {
-            int i = static_cast<int>(this->charVal);
-            return (i);
-        }
-        case intType:
-            return this->intVal;
-        case fType:
-        {
-            if (this->fVal > static_cast<float>(std::numeric_limits<char>::max()) || this->fVal < static_cast<float>(std::numeric_limits<char>::min()) || std::isnan(this->fVal) || std::isinf(this->fVal))
-                throw InvalidInputException();
-            int i = static_cast<int>(this->fVal);
-            return (i);
-        }
-        case dType:
-        {
-            if (this->doubleVal > static_cast<double>(std::numeric_limits<char>::max()) || this->doubleVal < static_cast<double>(std::numeric_limits<char>::min()) || std::isnan(this->doubleVal) || std::isinf(this->doubleVal))
-                throw InvalidInputException();
-            int i = static_cast<int>(this->doubleVal);
-            return (i);
-        }
-        default:
-            throw InvalidInputException();
-    }
-}
-
-float Scalar::getFVal() const
-{
-    switch (this->type)
-    {
-        case cType:
-        {
-            float f = static_cast<float>(this->charVal);
-            return (f);
-        }
-        case intType:
-        {
-            float f = static_cast<float>(this->fVal);
-            return (f);
-        }
-        case fType:
-            return (this->fVal);
-        case dType:
-        {
-            float f = static_cast<float>(this->doubleVal);
-            return (f);
-        }
-        default:
-            throw InvalidInputException();
-    }
-}
-
-double Scalar::getDVal() const
-{
-    switch (this->type)
-    {
-        case cType:
-        {
-            double d = static_cast<double>(this->charVal);
-            return (d);
-        }
-        case intType:
-        {
-            double d = static_cast<double>(this->intVal);
-            return (d);
-        }
-        case fType:
-        {
-            double d = static_cast<double>(this->fVal);
-            return (d);
-        }
-        case dType:
-            return (this->doubleVal);
-        default:
-            throw InvalidInputException();
-    }
-}
-
-const char * Scalar::EmptyInputException::what() const throw()
-{
-    return("Input cannot be invalid.");
-}
-
-const char * Scalar::InvalidInputException::what() const throw()
-{
-    return("impossible");
-}
-
-const char * Scalar::NonDisplayableException::what() const throw()
-{
-    return("Non displayable");
-}
-
-std::ostream& operator<<(std::ostream& o, const Scalar& rhs)
-{
-    o << "char: ";
-    try
-    {
-        char cVal = rhs.getCharVal();
-        o << cVal << std::endl;
-    }
-    catch(const std::exception& e)
-    {
-        std::cerr << e.what() << '\n';
-    }
-    o << "int: ";
-    try
-    {
-        int iVal = rhs.getIntVal();
-        o << iVal << std::endl;
-    }
-    catch(const std::exception& e)
-    {
-        std::cerr << e.what() << '\n';
-    }
-    o << "float: ";
-    try
-    {
-        float fVal = rhs.getFVal();
-        o << fVal << "f" << std::endl;
-    }
-    catch(const std::exception& e)
-    {
-        std::cerr << e.what() << '\n';
-    }
-    o << "double: ";
-    try
-    {
-        double dVal = rhs.getDVal();
-        o << dVal << std::endl;
-    }
-    catch(const std::exception& e)
-    {
-        std::cerr << e.what() << '\n';
-    }
-    
-    return o;
+    std::cout << "char: ";
+    putCharVal(charVal,intVal,fVal,doubleVal);
+    std::cout << "int: ";
+    putIntVal(charVal,intVal,fVal,doubleVal);
+    std::cout << "float: ";
+    putFVal(charVal,intVal,fVal,doubleVal);
+    std::cout << "double: ";
+    putDVal(charVal,intVal,fVal,doubleVal);
 }

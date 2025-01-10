@@ -6,7 +6,7 @@
 /*   By: bince <bince@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 14:22:05 by bince             #+#    #+#             */
-/*   Updated: 2025/01/10 14:22:06 by bince            ###   ########.fr       */
+/*   Updated: 2025/01/10 16:22:08 by bince            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,35 +23,19 @@ class Scalar
 {
 
     public:
-        Scalar(std::string &str);
-        ~Scalar();
-        char getCharVal() const;
-        int getIntVal() const;
-        float getFVal() const;
-        double getDVal() const;
+        static void convert(std::string &param);
     private:
-        char charVal;
-        int intVal;
-        double doubleVal;
-        float fVal;
-        enum {cType, intType, fType, dType, impossible} type;
+        Scalar(std::string &str);
+        Scalar(Scalar const &src);
+        Scalar &operator=(Scalar const &rhs);
+        ~Scalar();
     class EmptyInputException : public std::exception
-    {
-        public:
-            virtual const char * what() const throw();
-    };
-    class InvalidInputException : public std::exception
-    {
-        public:
-            virtual const char * what() const throw();
-    };
-    class NonDisplayableException : public std::exception
     {
         public:
             virtual const char * what() const throw();
     };
 };
 
-std::ostream & operator<<(std::ostream& o, const Scalar& rhs);
+enum {cType, intType, fType, dType, impossible} type;
 
 #endif

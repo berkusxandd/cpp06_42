@@ -6,7 +6,7 @@
 /*   By: bince <bince@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 14:22:00 by bince             #+#    #+#             */
-/*   Updated: 2025/01/10 14:22:01 by bince            ###   ########.fr       */
+/*   Updated: 2025/01/10 15:20:44 by bince            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,7 @@ int main(int ac, char **av)
         try
         {
             std::string str = std::string(av[1]);
-            Scalar scalar(str);
-            std::cout << scalar;
+            Scalar::convert(str);
         }
         catch(const std::exception& e)
         {
