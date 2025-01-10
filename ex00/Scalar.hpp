@@ -6,7 +6,7 @@
 /*   By: bince <bince@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 14:22:05 by bince             #+#    #+#             */
-/*   Updated: 2025/01/10 16:22:08 by bince            ###   ########.fr       */
+/*   Updated: 2025/01/10 16:24:31 by bince            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ class Scalar
     public:
         static void convert(std::string &param);
     private:
-        Scalar(std::string &str);
+        Scalar();
         Scalar(Scalar const &src);
         Scalar &operator=(Scalar const &rhs);
         ~Scalar();
